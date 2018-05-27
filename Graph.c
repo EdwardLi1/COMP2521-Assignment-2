@@ -85,7 +85,7 @@ bool adjacent(Graph g, Vertex src, Vertex dest) {
 
     while (cur2 != NULL && isAdjacent == 0) {
         if (cur2->w == src) {
-            isAdjacent = 1;
+            isAdjacent = 2;
         }
         cur2 = cur2->next;
     }
@@ -98,25 +98,57 @@ int numVerticies(Graph g) {
 
 //Returns a list of adjacent vertices on outgoing edges from a given vertex
 AdjList outIncident(Graph g, Vertex v){
-
-    //TODO
-    return 0;
-
+    return g->edges[v];
 }
 
-//Returns a list of adjacent verticeson incoming edges from a given vertex.
+//Returns a list of adjacent vertices on incoming edges from a given vertex.
 AdjList inIncident(Graph g, Vertex v){
 
-    //TODO
-    return 0;
+    AdjList head = NULL;
+    AdjList cur = NULL;
+
+    for (int i = 0; i < g->nV; i++) {
+        if (adjacent(g, i, v)) {
+            //Make new adjListNode
+            AdjList new = malloc(sizeof(adjListNode));
+            new->w = i;
+            new->weight = 0;
+            new->next = NULL;
+            if (head == NULL) {
+                head = new;
+                cur = new;
+            }
+            else {
+               cur->next = new;
+            }
+        }
+    }
+
+    return head;
 
 }
-void  showGraph(Graph g){
+void showGraph(Graph g) {
+    for (int i = 0; i < g->nV; i++) {
+        AdjList cur = g->edges[i];
+        printf("[%d] has an edge to [", i);
+        while (cur != NULL) {
+            printf("%d ", cur->w);
+            cur = cur->next;
+        }
+        printf("\n");
+    }
+}
+
+void freeGraph(Graph g){
     
-    //TODO
-
-}
-void  freeGraph(Graph g){
-
+    for (int i = 0; i < g->nV; i++) {
+        AdjList cur = g->edges[i];
+        while (cur != NULL) {
+            AdjList tmp = cur;
+            cur = cur->next;
+            free(tmp);
+        }
+    }
+    free(g);
 }
 
