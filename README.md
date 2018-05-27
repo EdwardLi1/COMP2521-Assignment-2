@@ -1,4 +1,4 @@
-COMP2521-Assignment-2
+COMP2521 Assignment 2
 
 Social Network Analysis
 
