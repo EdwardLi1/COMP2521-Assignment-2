@@ -35,15 +35,15 @@ void insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
     AdjList cur = g->edges[src];
 
     if (cur == NULL) {
-        cur = newEdge;
+        g->edges[src] = newEdge;
     }
 
     else {
         while (cur->next != NULL) {
             cur = cur->next;
         }
+        cur->next = newEdge;
     }
-    cur->next = newEdge;
     g->nE++;
 }
 
@@ -132,10 +132,15 @@ void showGraph(Graph g) {
         AdjList cur = g->edges[i];
         printf("[%d] has an edge to [", i);
         while (cur != NULL) {
-            printf("%d ", cur->w);
+            if (cur->next == NULL) {
+                printf("%d", cur->w);
+            }
+            else {
+                printf("%d, ", cur->w);
+            }
             cur = cur->next;
         }
-        printf("\n");
+        printf("]\n");
     }
 }
 
