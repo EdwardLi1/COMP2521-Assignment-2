@@ -72,8 +72,25 @@ void removeEdge(Graph g, Vertex src, Vertex dest) {
 }
 bool adjacent(Graph g, Vertex src, Vertex dest) {
 
-    //TODO
-    return 0;
+    int isAdjacent = 0;
+    AdjList cur = g->edges[src];
+    AdjList cur2 = g->edges[dest];
+
+    while (cur != NULL && isAdjacent == 0) {
+        if (cur->w == dest) {
+            isAdjacent = 1;
+        }
+        cur = cur->next;
+    }
+
+    while (cur2 != NULL && isAdjacent == 0) {
+        if (cur2->w == src) {
+            isAdjacent = 1;
+        }
+        cur2 = cur2->next;
+    }
+
+    return isAdjacent;
 }
 int numVerticies(Graph g) {
     return g->nV;
