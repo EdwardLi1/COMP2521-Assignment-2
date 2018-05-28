@@ -1,5 +1,6 @@
 // PQ ADT interface for Ass2 (COMP2521)
 #include <stdbool.h>
+#define MAX_HEAPSIZE 100
 
 typedef struct PQRep *PQ;
 
@@ -8,50 +9,50 @@ typedef struct ItemPQ {
    int         value;
 } ItemPQ;
 
-typedef struct QueueRep {
-	ItemPQ *head;  // ptr to first node
-	ItemPQ *tail;  // ptr to last node
+typedef struct PQueueRep {
+	ItemPQ *items
+	int nslots;
 	int size;
-} QueueRep;
+} PQRep;
+//the PQRep struct is based off the Heap struct from week 11 lecture notes from COMP2521
 
-
+void fixUp(Item a[], int i);
+void swap(Item a[], int i, int j)
 /* Creates new priority queue, that can store items of type ItemPQ.
 */
 PQ newPQ(){
-    PQ new = malloc(sizeof(PQ));
+    PQ new = (PQRep *)malloc(sizeof(PQRep));
     if (new == NULL){
         printf("Malloc Failed");
         exit(1);
     }
-    new->head = NULL;
-    new->tail = NULL;
+
+    ItemPQ *newItems = MAX_HEAPSIZE*malloc(sizeof(ItemPQ));
+    if (newItems == NULL){
+        printf("Malloc Failed");
+        exit(1);
+    }
+    new->items = newItems;
     new->size = 0;
+    new->nslots = MAX_HEAPSIZE;
     return new;
 }
 
 /* Adds item (ItemPQ) to the priority queue.
    If an item with 'key' exists, it's 'value' is updated.
 */
-void  addPQ(PQ, ItemPQ){
-void pq_insert(pq *p, pq_object *object, cost object_cost)
-{
-    ItemPQ *new = (ItemPQ *)malloc(sizeof(ItemPQ));
-    if(new==NULL){
-        printf("Malloc Failed\n");
-        exit(1);
+void  addPQ(PQ pq, ItemPQ, item){
+    //check if item with key exists
+    for(int i = 1; i <= pq->nslots; i++){
+        if (pq->items[i]->key == item->key){
+            pq->items[i]->value = item->value;
+            break; 
+        }
     }
-    //empty queue case
-    if (PQ->size == 0){
-        
-    }
-    //1 element queue case
-    PQ
-      object->pq_cost=object_cost;
-      new_item->content=object;
-
-      new_item->next=p->next;
-      p->next=new_item;
-}
+    assert(pq->size < pq->nslots);
+    pq->nitems++;
+    pq->items[pq->nitems] = item;
+    fixUp(pq->items, pq->size);
 
 }
 
@@ -75,3 +76,20 @@ void  showPQ(PQ){
 }
 void  freePQ(PQ){
 }
+
+
+//helper functions fixup and swap are taken from week11 lectures notes from COMP2521
+void fixUp(PQItem a[], int i)
+{
+   while (i > 1 && less(a[i/2],a[i])) {
+      swap(a, i, i/2);
+      i = i/2;
+   }
+}
+void swap(Item a[], int i, int j)
+{
+   Item tmp = a[i];
+   a[i] = a[j];
+   a[j] = tmp;
+}
+
