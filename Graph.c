@@ -85,7 +85,7 @@ bool adjacent(Graph g, Vertex src, Vertex dest) {
 
     while (cur2 != NULL && isAdjacent == 0) {
         if (cur2->w == src) {
-            isAdjacent = 2;
+            isAdjacent = 1;
         }
         cur2 = cur2->next;
     }
@@ -105,22 +105,26 @@ AdjList outIncident(Graph g, Vertex v){
 AdjList inIncident(Graph g, Vertex v){
 
     AdjList head = NULL;
-    AdjList cur = NULL;
+    AdjList tmp = NULL;
 
     for (int i = 0; i < g->nV; i++) {
-        if (adjacent(g, i, v)) {
-            //Make new adjListNode
-            AdjList new = malloc(sizeof(adjListNode));
-            new->w = i;
-            new->weight = 0;
-            new->next = NULL;
-            if (head == NULL) {
-                head = new;
-                cur = new;
+        AdjList cur = g->edges[i];
+        while (cur != NULL) {
+            if (cur->w == v) {
+                AdjList new = malloc(sizeof(adjListNode));
+                new->w = i;
+                new->weight = cur->weight;
+                new->next = NULL;
+                if (head == NULL) {
+                    head = new;
+                    tmp = new;
+                }
+                else {
+                    tmp->next = new;
+                    tmp = tmp->next;
+                }
             }
-            else {
-               cur->next = new;
-            }
+            cur = cur->next;
         }
     }
 
