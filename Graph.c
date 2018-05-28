@@ -35,15 +35,15 @@ void insertEdge(Graph g, Vertex src, Vertex dest, int weight) {
     AdjList cur = g->edges[src];
 
     if (cur == NULL) {
-        cur = newEdge;
+        g->edges[src] = newEdge;
     }
 
     else {
         while (cur->next != NULL) {
             cur = cur->next;
         }
+        cur->next = newEdge;
     }
-    cur->next = newEdge;
     g->nE++;
 }
 
@@ -98,25 +98,66 @@ int numVerticies(Graph g) {
 
 //Returns a list of adjacent vertices on outgoing edges from a given vertex
 AdjList outIncident(Graph g, Vertex v){
-
-    //TODO
-    return 0;
-
+    return g->edges[v];
 }
 
-//Returns a list of adjacent verticeson incoming edges from a given vertex.
+//Returns a list of adjacent vertices on incoming edges from a given vertex.
 AdjList inIncident(Graph g, Vertex v){
 
-    //TODO
-    return 0;
+    AdjList head = NULL;
+    AdjList tmp = NULL;
+
+    for (int i = 0; i < g->nV; i++) {
+        AdjList cur = g->edges[i];
+        while (cur != NULL) {
+            if (cur->w == v) {
+                AdjList new = malloc(sizeof(adjListNode));
+                new->w = i;
+                new->weight = cur->weight;
+                new->next = NULL;
+                if (head == NULL) {
+                    head = new;
+                    tmp = new;
+                }
+                else {
+                    tmp->next = new;
+                    tmp = tmp->next;
+                }
+            }
+            cur = cur->next;
+        }
+    }
+
+    return head;
 
 }
-void  showGraph(Graph g){
+void showGraph(Graph g) {
+    for (int i = 0; i < g->nV; i++) {
+        AdjList cur = g->edges[i];
+        printf("[%d] has an edge to [", i);
+        while (cur != NULL) {
+            if (cur->next == NULL) {
+                printf("%d", cur->w);
+            }
+            else {
+                printf("%d, ", cur->w);
+            }
+            cur = cur->next;
+        }
+        printf("]\n");
+    }
+}
+
+void freeGraph(Graph g){
     
-    //TODO
-
-}
-void  freeGraph(Graph g){
-
+    for (int i = 0; i < g->nV; i++) {
+        AdjList cur = g->edges[i];
+        while (cur != NULL) {
+            AdjList tmp = cur;
+            cur = cur->next;
+            free(tmp);
+        }
+    }
+    free(g);
 }
 
