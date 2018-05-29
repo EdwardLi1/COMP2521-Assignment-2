@@ -4,11 +4,11 @@
 #include <stdio.h>
 #include <assert.h>
 #define MAX_HEAPSIZE 100
-
+#include <math.h>
 typedef struct PQRep {
 	ItemPQ *items
-	int nslots;
-	int size;
+	int nslots;     //how many total slots we have
+	int size;       //how many were using rn
 } PQRep;
 
 void fixUp(Item a[], int i);
@@ -35,26 +35,39 @@ PQ newPQ(){
 }
 
 int PQEmpty(PQ p) {
-		return 0;
+	if (PQ->size == 0 || PQ == NULL){
+	    return 1;
+	}
+	return 0;
 }
 
 void  addPQ(PQ pq, ItemPQ, item){
     //check if item with key exists
+    //if it does then update its value
+    int bln = -1;
     for(int i = 1; i <= pq->nslots; i++){
         if (pq->items[i]->key == item->key){
             pq->items[i]->value = item->value;
+            bln = 1;
             break; 
         }
     }
-    assert(pq->size < pq->nslots);
-    pq->nitems++;
-    pq->items[pq->nitems] = item;
-    fixUp(pq->items, pq->size);
+    if (bln == -1){         //this indicates that we did not find an item with the existing key
+        assert(pq->size < pq->nslots);
+        pq->size++;
+        pq->items[pq->size] = item;
+        fixUp(pq->items, pq->size);
+    }
+    
 }
 
 ItemPQ dequeuePQ(PQ pq) {
-	ItemPQ throwAway = {0};
-	return throwAway;
+    Item remove = pq->items[1];
+    pq->items[1] = pq->items[h->nitems];
+    h->nitems--;
+    fixDown(h->items, 1, h->nitems);
+
+	return remove;
 }
 
 void updatePQ(PQ pq, ItemPQ element) {
@@ -62,13 +75,24 @@ void updatePQ(PQ pq, ItemPQ element) {
 }
 
 void  showPQ(PQ pq) {
-
+    int i = 0;
+    int j = 0;
+    while (i < pq->nslots){
+        if (i = pow(2,j)-1){
+            printf("\n");
+            j++;
+        }
+        printf("%d", pq->items[i]);
+    }
 }
 
 void  freePQ(PQ pq) {
-
+    for (int i = 0; i <= pq->size; i++){
+        free(pq->items[i]);
+    }
+    free(pq);
 }
-//helper functions fixup and swap are taken from week11 lectures notes from COMP2521
+//helper functions fixup, fix down and swap are based off week11 lectures notes from COMP2521
 void fixUp(PQItem a[], int i)
 {
    while (i > 1 && less(a[i/2],a[i])) {
@@ -76,9 +100,22 @@ void fixUp(PQItem a[], int i)
       i = i/2;
    }
 }
+void fixDown(PQItem a[], int i, int N)
+{
+   while (2*i <= N) {
+      int j = 2*i;          //j stores the index of the left child
+      if (j < N && less(a[j], a[j+1])) j++;     //j store index of the larger of the 2 children
+      if (!less(a[i], a[j])) break;
+      swap(a, i, j);
+      i = j;
+   }
+}
 void swap(Item a[], int i, int j)
 {
    Item tmp = a[i];
    a[i] = a[j];
    a[j] = tmp;
+}
+int less(int a, int b){
+    return (a < b) ? TRUE:FALSE;
 }

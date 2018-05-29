@@ -6,8 +6,8 @@
 typedef struct PQRep *PQ;
 
 typedef struct ItemPQ {
-   int         key;
-   int         value;
+   int         key;         
+   int         value;       //thing we determine priority with
 } ItemPQ;
 
 
