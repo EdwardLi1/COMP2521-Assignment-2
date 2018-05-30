@@ -17,8 +17,8 @@ void swap(ItemPQ a[], int i, int j);
 int less(ItemPQ a, ItemPQ b);
 void fixDown(ItemPQ a[], int i, int N);
 
-/* Creates new priority queue, that can store items of type ItemPQ.
-*/
+// Creates new priority queue, that can store items of type ItemPQ.
+
 PQ newPQ(){
     PQ new = (PQRep *)malloc(sizeof(PQRep));
     if (new == NULL){
@@ -32,7 +32,7 @@ PQ newPQ(){
         exit(1);
     }
     new->items = newItems;
-    new->size = 0;
+    new->size = 0; 
     new->nslots = MAX_HEAPSIZE;
     return new;
 }
@@ -61,7 +61,7 @@ void  addPQ(PQ pq, ItemPQ item){
         pq->items[pq->size] = item;
         fixUp(pq->items, pq->size);
     }
-    
+     
 }
 
 ItemPQ dequeuePQ(PQ pq) {
@@ -83,18 +83,17 @@ void  showPQ(PQ pq) {
     while (i < pq->nslots){
         double power = pow(2,j);
         if (i == power-1){
-            //printf("\n");
+            printf("\n");
             j++;
         }
-        //printf("%d", pq->items[i].key);
+        printf("%d", pq->items[i].key);
         i++;
-        //printf("i is %d\n", i);
     }
 }
 
 void  freePQ(PQ pq){
     //for (int i = 0; i <= pq->size; i++){
-     //   free(pq->items[i]);
+    //    free(pq->items[i]);
     //}
     free(pq->items);
     free(pq);
@@ -109,14 +108,14 @@ void fixUp(ItemPQ a[], int i){
 void fixDown(ItemPQ a[], int i, int N){
    while (2*i <= N) {
       int j = 2*i;          //j stores the index of the left child
-      if (j < N && less(a[j], a[j+1]) == 1) j++;     //j store index of the larger of the 2 children
+     if (j < N && less(a[j], a[j+1]) == 1) j++;     //j store index of the larger of the 2 children
       if (less(a[i], a[j]) == -1) break;
       swap(a, i, j);
       i = j;
    }
 }
 void swap(ItemPQ a[], int i, int j){
-   ItemPQ tmp = a[i];
+  ItemPQ tmp = a[i];
    a[i] = a[j];
    a[j] = tmp;
 }
