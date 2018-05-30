@@ -3,16 +3,19 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
-#define MAX_HEAPSIZE 100
 #include <math.h>
+#define MAX_HEAPSIZE 10
+
 typedef struct PQRep {
-	ItemPQ *items
+	ItemPQ *items;
 	int nslots;     //how many total slots we have
 	int size;       //how many were using rn
 } PQRep;
 
-void fixUp(Item a[], int i);
-void swap(Item a[], int i, int j)
+void fixUp(ItemPQ a[], int i);
+void swap(ItemPQ a[], int i, int j);
+int less(ItemPQ a, ItemPQ b);
+void fixDown(ItemPQ a[], int i, int N);
 
 /* Creates new priority queue, that can store items of type ItemPQ.
 */
@@ -23,7 +26,7 @@ PQ newPQ(){
         exit(1);
     }
 
-    ItemPQ *newItems = MAX_HEAPSIZE*malloc(sizeof(ItemPQ));
+    ItemPQ *newItems = malloc(MAX_HEAPSIZE*sizeof(ItemPQ));
     if (newItems == NULL){
         printf("Malloc Failed");
         exit(1);
@@ -35,19 +38,19 @@ PQ newPQ(){
 }
 
 int PQEmpty(PQ p) {
-	if (PQ->size == 0 || PQ == NULL){
+	if (p->size == 0 || p == NULL){
 	    return 1;
 	}
 	return 0;
 }
 
-void  addPQ(PQ pq, ItemPQ, item){
+void  addPQ(PQ pq, ItemPQ item){
     //check if item with key exists
     //if it does then update its value
     int bln = -1;
     for(int i = 1; i <= pq->nslots; i++){
-        if (pq->items[i]->key == item->key){
-            pq->items[i]->value = item->value;
+        if (pq->items[i].key == item.key){
+            pq->items[i].value = item.value;
             bln = 1;
             break; 
         }
@@ -62,10 +65,10 @@ void  addPQ(PQ pq, ItemPQ, item){
 }
 
 ItemPQ dequeuePQ(PQ pq) {
-    Item remove = pq->items[1];
-    pq->items[1] = pq->items[h->nitems];
-    h->nitems--;
-    fixDown(h->items, 1, h->nitems);
+    ItemPQ remove = pq->items[1];
+    pq->items[1] = pq->items[pq->size];
+    pq->size--;
+    fixDown(pq->items, 1, pq->size);
 
 	return remove;
 }
@@ -78,44 +81,45 @@ void  showPQ(PQ pq) {
     int i = 0;
     int j = 0;
     while (i < pq->nslots){
-        if (i = pow(2,j)-1){
-            printf("\n");
+        double power = pow(2,j);
+        if (i == power-1){
+            //printf("\n");
             j++;
         }
-        printf("%d", pq->items[i]);
+        //printf("%d", pq->items[i].key);
+        i++;
+        //printf("i is %d\n", i);
     }
 }
 
-void  freePQ(PQ pq) {
-    for (int i = 0; i <= pq->size; i++){
-        free(pq->items[i]);
-    }
+void  freePQ(PQ pq){
+    //for (int i = 0; i <= pq->size; i++){
+     //   free(pq->items[i]);
+    //}
+    free(pq->items);
     free(pq);
 }
 //helper functions fixup, fix down and swap are based off week11 lectures notes from COMP2521
-void fixUp(PQItem a[], int i)
-{
+void fixUp(ItemPQ a[], int i){
    while (i > 1 && less(a[i/2],a[i])) {
       swap(a, i, i/2);
       i = i/2;
    }
 }
-void fixDown(PQItem a[], int i, int N)
-{
+void fixDown(ItemPQ a[], int i, int N){
    while (2*i <= N) {
       int j = 2*i;          //j stores the index of the left child
-      if (j < N && less(a[j], a[j+1])) j++;     //j store index of the larger of the 2 children
-      if (!less(a[i], a[j])) break;
+      if (j < N && less(a[j], a[j+1]) == 1) j++;     //j store index of the larger of the 2 children
+      if (less(a[i], a[j]) == -1) break;
       swap(a, i, j);
       i = j;
    }
 }
-void swap(Item a[], int i, int j)
-{
-   Item tmp = a[i];
+void swap(ItemPQ a[], int i, int j){
+   ItemPQ tmp = a[i];
    a[i] = a[j];
    a[j] = tmp;
 }
-int less(int a, int b){
-    return (a < b) ? TRUE:FALSE;
+int less(ItemPQ a, ItemPQ b){
+    return (a.key < b.key) ? 1:-1;
 }
