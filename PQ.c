@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <math.h>
-#define MAX_HEAPSIZE 10
+#define MAX_HEAPSIZE 200
 
 typedef struct PQRep {
 	ItemPQ *items;
@@ -83,7 +83,26 @@ void  showPQ(PQ pq) {
     int count = 0;
     while (i < pq->nslots && i <= pq->size){
         double power = pow(2,j);
-        printf("%d", pq->items[i].key);
+        printf("%d ", pq->items[i].key);
+        count++;
+        if (count == power){
+            printf("\n");
+            count = 0;
+            j++;
+        }
+        i++;
+        
+    }
+    printf("\n");
+    printf("\n");
+    
+    
+     i = 1;
+     j = 0;
+     count = 0;
+    while (i < pq->nslots && i <= pq->size){
+        double power = pow(2,j);
+        printf("%d ", pq->items[i].value);
         count++;
         if (count == power){
             printf("\n");
@@ -105,19 +124,19 @@ void  freePQ(PQ pq){
 }
 //helper functions fixup, fix down and swap are based off week11 lectures notes from COMP2521
 void fixUp(ItemPQ a[], int i){
-   while (i > 1 && less(a[i/2],a[i])) {
-      swap(a, i, i/2);
-      i = i/2;
-   }
+     while (i > 1 && less(a[i/2],a[i])) {
+          swap(a, i, i/2);
+          i = i/2;
+     }
 }
 void fixDown(ItemPQ a[], int i, int N){
-   while (2*i <= N) {
-      int j = 2*i;          //j stores the index of the left child
-     if (j < N && less(a[j], a[j+1]) == 1) j++;     //j store index of the larger of the 2 children
-      if (less(a[i], a[j]) == -1) break;
-      swap(a, i, j);
-      i = j;
-   }
+     while (2*i <= N) {
+          int j = 2*i;          //j stores the index of the left child
+          if (j < N && less(a[j], a[j+1]) == 1) j++;     //j store index of the larger of the 2 children
+          if (less(a[i], a[j]) == -1) break;
+          swap(a, i, j);
+          i = j;
+     }
 }
 void swap(ItemPQ a[], int i, int j){
   ItemPQ tmp = a[i];
@@ -125,5 +144,9 @@ void swap(ItemPQ a[], int i, int j){
    a[j] = tmp;
 }
 int less(ItemPQ a, ItemPQ b){
-    return (a.key < b.key) ? 1:-1;
+    if (a.value < b.value){
+        return 1;
+    } else {
+        return 0;
+    }
 }
