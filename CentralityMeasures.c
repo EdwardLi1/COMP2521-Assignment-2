@@ -88,8 +88,36 @@ NodeValues closenessCentrality(Graph g){
 }
 
 NodeValues betweennessCentrality(Graph g){
-	NodeValues throwAway = {0};
-	return throwAway;
+	NodeValues betweeness;
+	ShortestPaths path;
+	int count1 = 0; //value for top of equation
+	int count2 = 0; // value for bottom of equation
+	betweeness.noNodes = numVerticies(g);
+	int i = 0;
+	while (i < betweeness.noNodes){//run through all nodes so that we find the betweeness centrality of each 
+	    double value;
+	    int j = 0;
+	    while (j < betweeness.noNodes){//used to run dijkstra on all nodes and check which ones pass through i
+	        path = dijkstra(g, j);
+	        int k = 0;
+	        while (path.pred[k] != NULL){//run through pred array with each value indicating a new shortest path
+	            int l = 0;
+	            while (1){//path.pred[k][l] != NULL){//run through the path to find if i exists in the path
+	                if (path.pred[k][l].v == i){
+	                    count2++;
+	                }
+	                count1++;
+	                l++;
+	            }
+	            k++;
+	        }
+	        j++;
+	    }
+	    value = count1/count2;
+	    betweeness.values[i] = value;      //betweeness of node i
+	    i++;
+	}
+	return betweeness;
 }
 
 NodeValues betweennessCentralityNormalised(Graph g){

@@ -78,17 +78,22 @@ void updatePQ(PQ pq, ItemPQ element) {
 }
 
 void  showPQ(PQ pq) {
-    int i = 0;
+    int i = 1;
     int j = 0;
-    while (i < pq->nslots){
+    int count = 0;
+    while (i < pq->nslots && i <= pq->size){
         double power = pow(2,j);
-        if (i == power-1){
+        printf("%d", pq->items[i].key);
+        count++;
+        if (count == power){
             printf("\n");
+            count = 0;
             j++;
         }
-        printf("%d", pq->items[i].key);
         i++;
+        
     }
+    printf("\n");
 }
 
 void  freePQ(PQ pq){
