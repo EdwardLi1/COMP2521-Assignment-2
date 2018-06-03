@@ -12,50 +12,53 @@ PredNode *makePred(int v, struct PredNode *next);
 ShortestPaths dijkstra(Graph g, Vertex v) {
 
     //Initialising ShortestPaths
+    
     Path path = malloc(sizeof(ShortestPaths));
-
     path->noNodes = numVerticies(g);
     path->src = v;
     path->dist = malloc(path->noNodes*sizeof(int));
     path->pred = malloc(path->noNodes*sizeof(PredNode *));
-    
-    for (int i = 0; i < path->noNodes; i++) {
-        path->dist[i] = 1000000;
-        path->pred[i] = NULL;
-    }
-
     path->dist[v] = 0;
-
-    int visited[path->noNodes];
-    for (int i = 0; i < path->noNodes; i++) {
-        visited[i] = -1;
-    }
-
     PQ queue = newPQ();
-    ItemPQ new = makeItem(v, 1);
-    addPQ(queue, new);
+
+    for (int i = 0; i < path->noNodes; i++) {
+        if (i != v) {
+            path->dist[i] = 1000000;
+            path->pred[i] = NULL;
+        }
+        ItemPQ new = makeItem(i, path->dist[i]);
+        addPQ(queue, new);
+    }
 
     while (!PQEmpty(queue)) {
         ItemPQ next = dequeuePQ(queue);
-        PredNode *previous = makePred(next.key, NULL);
-        if (visited[next.key] == -1) {
-            AdjList hasEdge = outIncident(g, next.key);
-            while (hasEdge != NULL) {
-                if ((hasEdge->weight + path->dist[next.key]) < path->dist[hasEdge->w]) {
-                    path->dist[hasEdge->w] = hasEdge->weight + path->dist[next.key];
-                    path->pred[hasEdge->w] = previous;
-                    ItemPQ new = makeItem(hasEdge->w, hasEdge->weight);
-                    addPQ(queue,new);
-                }
-                hasEdge = hasEdge->next;
+        AdjList hasEdge = outIncident(g, next.key);
+        while (hasEdge != NULL) {
+            if (path->dist[next.key] + hasEdge->weight < path->dist[hasEdge->w]) {
+                path->dist[hasEdge->w] = path->dist[next.key] + hasEdge->weight;
+                PredNode *previous = makePred(next.key, NULL);
+                path->pred[next.key] = previous;
+                ItemPQ new = makeItem(hasEdge->w, path->dist[hasEdge->w]);
+                updatePQ(queue, new);
+
             }
+            hasEdge = hasEdge->next;
         }
-    } 
-    
+    }
+
     return *path;
 }
 
 void showShortestPaths(ShortestPaths paths) {
+
+    printf("The shortest distance array for %d is:\n", paths.src);
+    for (int i = 0; i < paths.noNodes; i++) {
+        printf("%d: %d", i, paths.dist[i]);
+    }
+    printf("The previous node array for %d is:\n", paths.src);
+    for (int i = 0; i < paths.noNodes; i++) {
+        printf("%d: %p", i, paths.pred[i]);
+    }
 
 }
 
