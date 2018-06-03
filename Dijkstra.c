@@ -4,10 +4,12 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <stdio.h>
+#define INFINITY 1000000
 
 typedef struct ShortestPaths *Path;
 ItemPQ makeItem(int key, int value); 
 PredNode *makePred(int v, struct PredNode *next);
+void showPred(PredNode *Pred); 
 
 ShortestPaths dijkstra(Graph g, Vertex v) {
 
@@ -22,7 +24,7 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
     
     for (int i = 0; i < path->noNodes; i++) {
         if (i != v) {
-            path->dist[i] = 1000000;
+            path->dist[i] = INFINITY;
             path->pred[i] = NULL;
         }
         else {
@@ -38,20 +40,31 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
     while (!PQEmpty(queue)) {
         ItemPQ next = dequeuePQ(queue);
         AdjList hasEdge = outIncident(g, next.key);
-        //printf("=================== Dequeue ==============================\n");
+        //printf("=================== Dequeue %d ==============================\n", next.key);
         //showPQ(queue);
         while (hasEdge != NULL) {
             if (path->dist[next.key] + hasEdge->weight < path->dist[hasEdge->w]) {
+                //printf("\nOld Distance from %d to %d is %d\n", next.key, hasEdge->w, path->dist[hasEdge->w]);
+                //printf("Edge update ran for %d to new value %d\n", hasEdge->w, path->dist[next.key] + hasEdge->weight);
                 path->dist[hasEdge->w] = path->dist[next.key] + hasEdge->weight;
-                PredNode *previous = makePred(next.key, NULL);
-                path->pred[next.key] = previous;
+                PredNode *previous = makePred(next.key, path->pred[next.key]);
+                path->pred[hasEdge->w] = previous;
+                //printf("New pred node for %d:\n", hasEdge->w);
+                //showPred(path->pred[hasEdge->w]);
                 ItemPQ new = makeItem(hasEdge->w, path->dist[hasEdge->w]);
                 updatePQ(queue, new);
-                //printf("================== Update ===================================\n");
+                //printf("================== Update %d===================================\n", hasEdge->w);
                 //showPQ(queue);
 
             }
             hasEdge = hasEdge->next;
+        }
+    }
+
+    for (int i = 0; i < path->noNodes; i++) {
+        if (path->dist[i] == INFINITY) {
+            path->dist[i] = 0;
+            path->pred[i] = NULL;
         }
     }
 
@@ -88,4 +101,16 @@ PredNode *makePred(int v, struct PredNode *next) {
     new->v = v;
     new->next = next;
     return new;
+}
+
+void showPred(PredNode *Pred) {
+    while (Pred != NULL) {
+        if (Pred->next == NULL) {
+            printf("%d->NULL\n", Pred->v);
+        }
+        else {
+            printf("%d->", Pred->v);
+        }
+        Pred = Pred->next;
+    }
 }
