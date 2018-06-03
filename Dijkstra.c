@@ -12,18 +12,21 @@ PredNode *makePred(int v, struct PredNode *next);
 ShortestPaths dijkstra(Graph g, Vertex v) {
 
     //Initialising ShortestPaths
-    
-    Path path = malloc(sizeof(ShortestPaths));
+    Path path = (ShortestPaths *)malloc(sizeof(ShortestPaths));
     path->noNodes = numVerticies(g);
     path->src = v;
     path->dist = malloc(path->noNodes*sizeof(int));
     path->pred = malloc(path->noNodes*sizeof(PredNode *));
-    path->dist[v] = 0;
     PQ queue = newPQ();
 
+    
     for (int i = 0; i < path->noNodes; i++) {
         if (i != v) {
             path->dist[i] = 1000000;
+            path->pred[i] = NULL;
+        }
+        else {
+            path->dist[i] = 0;
             path->pred[i] = NULL;
         }
         ItemPQ new = makeItem(i, path->dist[i]);
