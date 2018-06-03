@@ -130,7 +130,7 @@ void  freePQ(PQ pq){
 }
 //helper functions fixup, fix down and swap are based off week11 lectures notes from COMP2521
 void fixUp(ItemPQ a[], int i){
-    while (i > 1 && less(a[i/2],a[i]) == 0) {
+    while (i >= 1 && less(a[i/2],a[i]) == 0) {
         swap(a, i, i/2);
         i = i/2;
     }
@@ -150,7 +150,7 @@ void swap(ItemPQ a[], int i, int j){
     a[j] = tmp;
 }
 int less(ItemPQ a, ItemPQ b){
-    if (a.value < b.value){
+    if (a.value <= b.value){
         return 1;
     } else {
         return 0;

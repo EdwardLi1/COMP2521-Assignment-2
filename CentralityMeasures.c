@@ -8,6 +8,7 @@
 NodeValues outDegreeCentrality(Graph g){
 	NodeValues result;
 	result.noNodes = numVerticies(g);
+	result.values = malloc(result.noNodes*sizeof(double));
 	Vertex i = 0;
 	while (i < numVerticies(g)){
 	    AdjList out = outIncident(g, i);
@@ -17,7 +18,7 @@ NodeValues outDegreeCentrality(Graph g){
 	        j++;
 	        curr = curr->next;
 	    }
-	    //j now holds the size of AdjList in 
+	    //j now holds the size of AdjList in
 	    //j is also the indegree of in
 	    result.values[i] = j;
 	    i++;
@@ -27,6 +28,7 @@ NodeValues outDegreeCentrality(Graph g){
 NodeValues inDegreeCentrality(Graph g){
 	NodeValues result;
 	result.noNodes = numVerticies(g);
+	result.values = malloc(result.noNodes*sizeof(double));
 	Vertex i = 0;
 	while (i < numVerticies(g)){
 	    AdjList in = inIncident(g, i);
@@ -46,6 +48,7 @@ NodeValues inDegreeCentrality(Graph g){
 NodeValues degreeCentrality(Graph g) {
 	NodeValues degree;
 	degree.noNodes = numVerticies(g);
+	degree.values = malloc(degree.noNodes*sizeof(double));
     int i = 0;
     NodeValues in = inDegreeCentrality(g);
     NodeValues out = outDegreeCentrality(g);
@@ -58,6 +61,7 @@ NodeValues degreeCentrality(Graph g) {
 NodeValues closenessCentrality(Graph g){
 	NodeValues closeness;
 	closeness.noNodes = numVerticies(g);
+	closeness.values = malloc(closeness.noNodes*sizeof(double));
 	int i = 0;
 	while (i < closeness.noNodes){
 	    int n;
@@ -93,6 +97,7 @@ NodeValues betweennessCentrality(Graph g){
 	int count1 = 0; //value for top of equation
 	int count2 = 0; // value for bottom of equation
 	betweeness.noNodes = numVerticies(g);
+	betweeness.values = malloc(betweeness.noNodes*sizeof(double));
 	int i = 0;
 	while (i < betweeness.noNodes){//run through all nodes so that we find the betweeness centrality of each 
 	    double value;
@@ -123,6 +128,8 @@ NodeValues betweennessCentrality(Graph g){
 NodeValues betweennessCentralityNormalised(Graph g){
 	NodeValues normalised;
 	NodeValues betweeness  = betweennessCentrality(g);
+	normalised.noNodes = betweeness.noNodes;
+	normalised.values = malloc(normalised.noNodes*sizeof(double));
 	double bottom = (betweeness.noNodes-1)*(betweeness.noNodes-2);
 	bottom = 1/bottom;
 	int i = 0;

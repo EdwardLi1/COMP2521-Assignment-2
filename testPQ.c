@@ -25,6 +25,9 @@ int main(){
     ItemPQ seven;
     seven.key = 12;
     seven.value = 1;
+    ItemPQ eight;
+    eight.key = 20;
+    eight.value = 0;
     addPQ(new, one);
     addPQ(new, two);
     addPQ(new, three);
@@ -32,6 +35,7 @@ int main(){
     addPQ(new, five);
     addPQ(new, six);
     addPQ(new, seven);
+    addPQ(new, eight);
     showPQ(new);
     printf("\n");
     dequeuePQ(new);
