@@ -150,7 +150,7 @@ void swap(ItemPQ a[], int i, int j){
     a[j] = tmp;
 }
 int less(ItemPQ a, ItemPQ b){
-    if (a.value < b.value){
+    if (a.value <= b.value){
         return 1;
     } else {
         return 0;
