@@ -21,7 +21,8 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
     path->pred = malloc(path->noNodes*sizeof(PredNode *));
     PQ queue = newPQ();
 
-    
+    //Setting all initial distances from source node to all other nodes to be infinity except for distance to source node itself
+    //Setting all pred to be NULL
     for (int i = 0; i < path->noNodes; i++) {
         if (i != v) {
             path->dist[i] = INFINITY;
@@ -31,6 +32,7 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
             path->dist[i] = 0;
             path->pred[i] = NULL;
         }
+        //Adding all the nodes to PQ with their priority based on distance from source node (currently infinity)
         ItemPQ new = makeItem(i, path->dist[i]);
         addPQ(queue, new);
     }
