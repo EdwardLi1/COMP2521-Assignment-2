@@ -102,7 +102,7 @@ NodeValues betweennessCentrality(Graph g){
 	        int k = 0;
 	        while (path.pred[k] != NULL){//run through pred array with each value indicating a new shortest path
 	            int l = 0;
-	            while (1){//path.pred[k][l] != NULL){//run through the path to find if i exists in the path
+	            while (path.pred[k][l].next != NULL){//run through the path to find if i exists in the path
 	                if (path.pred[k][l].v == i){
 	                    count2++;
 	                }
@@ -121,8 +121,18 @@ NodeValues betweennessCentrality(Graph g){
 }
 
 NodeValues betweennessCentralityNormalised(Graph g){
-	NodeValues throwAway = {0};
-	return throwAway;
+	NodeValues normalised;
+	NodeValues betweeness  = betweennessCentrality(g);
+	double bottom = (betweeness.noNodes-1)*(betweeness.noNodes-2);
+	bottom = 1/bottom;
+	int i = 0;
+	double value = 0;
+	while (i < betweeness.noNodes){
+	    value = bottom * betweeness.values[i];
+	    normalised.values[i] = value;
+	    i++;
+	}
+	return normalised;
 }
 
 void showNodeValues(NodeValues values){
