@@ -130,19 +130,19 @@ void  freePQ(PQ pq){
 }
 //helper functions fixup, fix down and swap are based off week11 lectures notes from COMP2521
 void fixUp(ItemPQ a[], int i){
-     while (i > 1 && !less(a[i/2],a[i])) {
-          swap(a, i, i/2);
-          i = i/2;
-     }
+    while (i > 1 && less(a[i/2],a[i]) == 0) {
+        swap(a, i, i/2);
+        i = i/2;
+    }
 }
 void fixDown(ItemPQ a[], int i, int N){
-     while (2*i <= N) {
-          int j = 2*i;          //j stores the index of the left child
-          if (j < N && !less(a[j], a[j+1]) == 1) j++;     //j store index of the larger of the 2 children
-          if (!less(a[i], a[j]) == -1) break;
-          swap(a, i, j);
-          i = j;
-     }
+    while (2*i <= N) {
+         int j = 2*i;          //j stores the index of the left child
+         if (j < N && less(a[j], a[j+1]) == 0) j++;     //j store index of the larger of the 2 children
+         if (less(a[i], a[j]) == 0) break;
+         swap(a, i, j);
+         i = j;
+    }
 }
 void swap(ItemPQ a[], int i, int j){
     ItemPQ tmp = a[i];
