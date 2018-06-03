@@ -37,7 +37,5 @@ int main(){
     dequeuePQ(new);
     showPQ(new);
     printf("\n");
-    
-    
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
