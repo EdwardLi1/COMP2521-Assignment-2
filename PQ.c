@@ -50,7 +50,7 @@ void  addPQ(PQ pq, ItemPQ item){
     int bln = -1;
     for(int i = 1; i <= pq->nslots; i++){
         if (pq->items[i].key == item.key){
-            pq->items[i].value = item.value;
+            updatePQ(pq, item);
             bln = 1;
             break; 
         }
@@ -69,12 +69,18 @@ ItemPQ dequeuePQ(PQ pq) {
     pq->items[1] = pq->items[pq->size];
     pq->size--;
     fixDown(pq->items, 1, pq->size);
-
 	return remove;
 }
 
 void updatePQ(PQ pq, ItemPQ element) {
-
+    int i = 0;
+    while (i <= pq->size){
+        if (pq->items[i].key == element.key){
+            pq->items[i].value = element.value;
+            fixUp(pq->items, pq->size);
+        }
+        i++;
+    }
 }
 
 void  showPQ(PQ pq) {
@@ -124,7 +130,7 @@ void  freePQ(PQ pq){
 }
 //helper functions fixup, fix down and swap are based off week11 lectures notes from COMP2521
 void fixUp(ItemPQ a[], int i){
-     while (i > 1 && less(a[i/2],a[i])) {
+     while (i > 1 && !less(a[i/2],a[i])) {
           swap(a, i, i/2);
           i = i/2;
      }
@@ -132,16 +138,16 @@ void fixUp(ItemPQ a[], int i){
 void fixDown(ItemPQ a[], int i, int N){
      while (2*i <= N) {
           int j = 2*i;          //j stores the index of the left child
-          if (j < N && less(a[j], a[j+1]) == 1) j++;     //j store index of the larger of the 2 children
-          if (less(a[i], a[j]) == -1) break;
+          if (j < N && !less(a[j], a[j+1]) == 1) j++;     //j store index of the larger of the 2 children
+          if (!less(a[i], a[j]) == -1) break;
           swap(a, i, j);
           i = j;
      }
 }
 void swap(ItemPQ a[], int i, int j){
-  ItemPQ tmp = a[i];
-   a[i] = a[j];
-   a[j] = tmp;
+    ItemPQ tmp = a[i];
+    a[i] = a[j];
+    a[j] = tmp;
 }
 int less(ItemPQ a, ItemPQ b){
     if (a.value < b.value){
