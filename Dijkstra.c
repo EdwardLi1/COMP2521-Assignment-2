@@ -36,27 +36,20 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
         ItemPQ new = makeItem(i, path->dist[i]);
         addPQ(queue, new);
     }
-    //printf("\n=========================================================\n");
-    //showPQ(queue);
 
     while (!PQEmpty(queue)) {
         ItemPQ next = dequeuePQ(queue);
         AdjList hasEdge = outIncident(g, next.key);
-        //printf("=================== Dequeue %d ==============================\n", next.key);
-        //showPQ(queue);
+        //Cycle through all outward edges and compare dist(src,a) + dist(a,b) with current dist(src,b)
         while (hasEdge != NULL) {
             if (path->dist[next.key] + hasEdge->weight < path->dist[hasEdge->w]) {
-                //printf("\nOld Distance from %d to %d is %d\n", next.key, hasEdge->w, path->dist[hasEdge->w]);
-                //printf("Edge update ran for %d to new value %d\n", hasEdge->w, path->dist[next.key] + hasEdge->weight);
+                //Update dist(src,b)
                 path->dist[hasEdge->w] = path->dist[next.key] + hasEdge->weight;
                 PredNode *previous = makePred(next.key, path->pred[next.key]);
                 path->pred[hasEdge->w] = previous;
-                //printf("New pred node for %d:\n", hasEdge->w);
-                //showPred(path->pred[hasEdge->w]);
+                //Update the priority of vertex b
                 ItemPQ new = makeItem(hasEdge->w, path->dist[hasEdge->w]);
                 updatePQ(queue, new);
-                //printf("================== Update %d===================================\n", hasEdge->w);
-                //showPQ(queue);
 
             }
             hasEdge = hasEdge->next;
@@ -88,7 +81,14 @@ void showShortestPaths(ShortestPaths paths) {
 
 
 void  freeShortestPaths(ShortestPaths paths) {
-
+    /*
+    ShortestPaths *path = &paths;
+    for (int i = 0; i < path->noNodes; i++) {
+        free(path->dist[i]);
+        free(path->pred[i]);
+    }
+    free(paths);
+    */
 }
 
 ItemPQ makeItem(int key, int value) {
