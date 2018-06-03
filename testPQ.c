@@ -21,7 +21,7 @@ int main(){
     five.value = 7;
     ItemPQ six;
     six.key = 11;
-    six.value = 2;
+    six.value = 0;
     ItemPQ seven;
     seven.key = 12;
     seven.value = 1;
@@ -37,9 +37,36 @@ int main(){
     addPQ(new, seven);
     addPQ(new, eight);
     showPQ(new);
+
+    printf("===========================================================\n");
+
+    ItemPQ tmp;
+    tmp.key = 10;
+    tmp.value = 5;
+
+    updatePQ(new, tmp);
+
     printf("\n");
+
+    showPQ(new);
+
+    printf("===========================================================\n");
+
     dequeuePQ(new);
     showPQ(new);
+
+    printf("===========================================================\n");
+
+    dequeuePQ(new);
+    showPQ(new);
+
+    printf("===========================================================\n");
+
+    dequeuePQ(new);
+    showPQ(new);
+
+    printf("===========================================================\n");
+
     printf("\n");
     return EXIT_SUCCESS;
 }
