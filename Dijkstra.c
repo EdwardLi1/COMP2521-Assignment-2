@@ -32,10 +32,14 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
         ItemPQ new = makeItem(i, path->dist[i]);
         addPQ(queue, new);
     }
+    //printf("\n=========================================================\n");
+    //showPQ(queue);
 
     while (!PQEmpty(queue)) {
         ItemPQ next = dequeuePQ(queue);
         AdjList hasEdge = outIncident(g, next.key);
+        //printf("=================== Dequeue ==============================\n");
+        //showPQ(queue);
         while (hasEdge != NULL) {
             if (path->dist[next.key] + hasEdge->weight < path->dist[hasEdge->w]) {
                 path->dist[hasEdge->w] = path->dist[next.key] + hasEdge->weight;
@@ -43,6 +47,8 @@ ShortestPaths dijkstra(Graph g, Vertex v) {
                 path->pred[next.key] = previous;
                 ItemPQ new = makeItem(hasEdge->w, path->dist[hasEdge->w]);
                 updatePQ(queue, new);
+                //printf("================== Update ===================================\n");
+                //showPQ(queue);
 
             }
             hasEdge = hasEdge->next;

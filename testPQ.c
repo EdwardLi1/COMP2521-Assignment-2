@@ -5,7 +5,7 @@
 int main(){
     PQ new = newPQ();
     ItemPQ one;
-    one.key = 1;
+    one.key = 0;
     one.value = 2;
     ItemPQ two;
     two.key = 2;
