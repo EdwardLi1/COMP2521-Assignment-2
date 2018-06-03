@@ -16,11 +16,28 @@ int main(){
     ItemPQ four;
     four.key = 3;
     four.value = 1;
+    ItemPQ five;
+    five.key = 10;
+    five.value = 7;
+    ItemPQ six;
+    six.key = 11;
+    six.value = 2;
+    ItemPQ seven;
+    seven.key = 12;
+    seven.value = 1;
     addPQ(new, one);
     addPQ(new, two);
     addPQ(new, three);
     addPQ(new, four);
+    addPQ(new, five);
+    addPQ(new, six);
+    addPQ(new, seven);
     showPQ(new);
+    printf("\n");
+    dequeuePQ(new);
+    showPQ(new);
+    printf("\n");
+    
     
   return EXIT_SUCCESS;
 }

@@ -7,7 +7,7 @@
 
 typedef struct ShortestPaths *Path;
 ItemPQ makeItem(int key, int value); 
-PredNode *makePred(int v, struct PredNode *next); 
+PredNode *makePred(int v, struct PredNode *next);
 
 ShortestPaths dijkstra(Graph g, Vertex v) {
 
