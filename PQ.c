@@ -14,7 +14,7 @@ typedef struct PQRep {
 
 void fixUp(ItemPQ a[], int i);
 void swap(ItemPQ a[], int i, int j);
-int less(ItemPQ a, ItemPQ b);
+int larger(ItemPQ a, ItemPQ b);
 void fixDown(ItemPQ a[], int i, int N);
 
 // Creates new priority queue, that can store items of type ItemPQ.
@@ -130,18 +130,18 @@ void  freePQ(PQ pq){
 }
 //helper functions fixup, fix down and swap are based off week11 lectures notes from COMP2521
 void fixUp(ItemPQ a[], int i){
-    while (i >= 1 && less(a[i/2],a[i]) == 0) {
+    while (i > 1 && larger(a[i/2],a[i]) == 1) {
         swap(a, i, i/2);
         i = i/2;
     }
 }
 void fixDown(ItemPQ a[], int i, int N){
     while (2*i <= N) {
-         int j = 2*i;          //j stores the index of the left child
-         if (j < N && less(a[j], a[j+1]) == 0) j++;     //j store index of the larger of the 2 children
-         if (less(a[i], a[j]) == 0) break;
-         swap(a, i, j);
-         i = j;
+        int j = 2*i;          //j stores the index of the left child
+        if (j < N && larger(a[j], a[j+1]) == 1) j++;     //j store index of the smaller of the 2 children
+        if (larger(a[i], a[j]) == 0 && a[i].value != a[j].value) break;
+        swap(a, i, j);
+        i = j;
     }
 }
 void swap(ItemPQ a[], int i, int j){
@@ -149,8 +149,8 @@ void swap(ItemPQ a[], int i, int j){
     a[i] = a[j];
     a[j] = tmp;
 }
-int less(ItemPQ a, ItemPQ b){
-    if (a.value <= b.value){
+int larger(ItemPQ a, ItemPQ b){
+    if (a.value > b.value){
         return 1;
     } else {
         return 0;
