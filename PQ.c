@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <math.h>
-#define MAX_HEAPSIZE 200
+#define INIT_HEAPSIZE 2
 
 typedef struct PQRep {
 	ItemPQ *items;
@@ -16,7 +16,7 @@ void fixUp(ItemPQ a[], int i);
 void swap(ItemPQ a[], int i, int j);
 int larger(ItemPQ a, ItemPQ b);
 void fixDown(ItemPQ a[], int i, int N);
-
+void arrayCopy(ItemPQ *array1, ItemPQ *array2, int size);
 // Creates new priority queue, that can store items of type ItemPQ.
 
 PQ newPQ(){
@@ -26,14 +26,15 @@ PQ newPQ(){
         exit(1);
     }
 
-    ItemPQ *newItems = malloc(MAX_HEAPSIZE*sizeof(ItemPQ));
+    ItemPQ *newItems = malloc(INIT_HEAPSIZE*sizeof(ItemPQ));
     if (newItems == NULL){
         printf("Malloc Failed");
         exit(1);
     }
+
     new->items = newItems;
     new->size = 0; 
-    new->nslots = MAX_HEAPSIZE;
+    new->nslots = INIT_HEAPSIZE;
     return new;
 }
 
@@ -48,7 +49,7 @@ void  addPQ(PQ pq, ItemPQ item){
     //check if item with key exists
     //if it does then update its value
     int bln = -1;
-    for(int i = 1; i <= pq->nslots; i++){
+    for(int i = 1; i <= pq->size; i++){
         if (pq->items[i].key == item.key){
             updatePQ(pq, item);
             bln = 1;
@@ -56,6 +57,12 @@ void  addPQ(PQ pq, ItemPQ item){
         }
     }
     if (bln == -1){         //this indicates that we did not find an item with the existing key
+        if (pq->size == pq->nslots -1){
+            pq->nslots++;
+            ItemPQ *newItems = malloc(pq->nslots*sizeof(ItemPQ));            
+            arrayCopy(pq->items, newItems, pq->size);
+            pq->items = newItems;
+        }
         assert(pq->size < pq->nslots);
         pq->size++;
         pq->items[pq->size] = item;
@@ -156,3 +163,11 @@ int larger(ItemPQ a, ItemPQ b){
         return 0;
     }
 }
+void arrayCopy(ItemPQ *array1, ItemPQ *array2, int size){     //copy contents of array1 into array2
+    int i = 1;
+    while (i <= size){
+        array2[i] = array1[i];
+        i++;
+    }
+}
+
